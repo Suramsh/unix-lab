@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unix Lab — Chit Reference</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0d0d;color:#e0e0e0;font-family:'Courier New',monospace;min-height:100vh}
+#home{display:block}
+#detail{display:none}
+.header{padding:28px 24px 14px;border-bottom:1px solid #1e1e1e}
+.header h1{font-size:20px;color:#a8ff60;letter-spacing:2px}
+.header p{font-size:11px;color:#555;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:24px}
+.chit-btn{background:#111;border:1px solid #222;border-radius:8px;padding:24px 0;
+  text-align:center;cursor:pointer;transition:all .15s;color:#e0e0e0;font-family:'Courier New',monospace}
+.chit-btn:hover{background:#1a1a1a;border-color:#a8ff60;color:#a8ff60}
+.chit-btn .num{font-size:34px;font-weight:bold;color:#a8ff60;display:block;margin-bottom:6px}
+.chit-btn .lbl{font-size:10px;color:#555;line-height:1.6}
+.back-bar{padding:14px 24px;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;gap:12px}
+.back-btn{background:none;border:1px solid #333;color:#a8ff60;padding:6px 14px;border-radius:4px;
+  cursor:pointer;font-family:'Courier New',monospace;font-size:12px}
+.back-btn:hover{background:#1a1a1a}
+.chit-title{font-size:16px;color:#a8ff60}
+.tabs{display:flex;padding:0 24px;margin-top:18px;border-bottom:1px solid #1e1e1e}
+.tab-btn{padding:10px 24px;cursor:pointer;font-family:'Courier New',monospace;font-size:12px;
+  border:none;background:none;color:#555;border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn.active{color:#a8ff60;border-bottom:2px solid #a8ff60}
+.tab-content{display:none;padding:20px 24px}
+.tab-content.active{display:block}
+.prog-lbl{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.prog-title{font-size:14px;color:#fff;margin-bottom:14px;font-weight:bold}
+.sec-lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;
+  border-radius:3px;display:inline-block;margin-bottom:6px;margin-top:14px}
+.l-exec{background:#1a2a1a;color:#a8ff60;border:1px solid #2a4a2a}
+.l-code{background:#1a1a2a;color:#60aaff;border:1px solid #2a2a4a}
+.l-out{background:#2a1a0a;color:#ffaa40;border:1px solid #4a2a0a}
+pre{background:#111;border:1px solid #1e1e1e;border-radius:6px;padding:14px;
+  overflow-x:auto;font-size:11.5px;line-height:1.7;white-space:pre;
+  font-family:'Courier New',monospace;margin-bottom:6px}
+.code-block{border-left:2px solid #60aaff}
+.exec-block{border-left:2px solid #a8ff60}
+.out-block{border-left:2px solid #ffaa40;color:#ffaa40}
+</style>
+</head>
+<body>
+<div id="home">
+  <div class="header">
+    <h1>$ unix-lab --chit-ref</h1>
+    <p>Pick your chit number. Both programs will show.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+<div id="detail">
+  <div class="back-bar">
+    <button class="back-btn" onclick="goHome()">&#8592; Back</button>
+    <span class="chit-title" id="chit-title"></span>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('a')">Program A</button>
+    <button class="tab-btn" onclick="switchTab('b')">Program B</button>
+  </div>
+  <div id="tab-a" class="tab-content active"></div>
+  <div id="tab-b" class="tab-content"></div>
+</div>
+<script>
+var D = {};
+
+D[1]={title:"Chit 1 — Vim Editor",
+a:{label:"1a",title:"Vim Editor — Operations on test1.txt and test2.txt",
+exec:"vi test1.txt",
+code:"# Type the content inside vi, then press ESC\n\n# Save the file\n:wq\n\n# Write line 10 to test2.txt\n:10w test2.txt\n\n# Replace AI interactively\n:1,$ s/AI/Artificial Learning/gc\n# Press y for each match\n\n# Delete line 5 to buffer a\n5G\n\"add\n:w\n\n# Switch to test2.txt, paste, switch back\n:e test2.txt\n\"ap\n:e test1.txt\n\n# Line 1 -> 15 right -> 3 down -> 2 left -> replace with M\n1G\n15l\n3j\nhh\nrM\n:wq\n\n# In test2.txt: 3 words fwd, 2 back, delete word, line extremes\n:e test2.txt\n3w\n2b\ndw\n0\n$\n:wq\n\n# Join first 3 lines in test1.txt\n:e test1.txt\n1G\n2J\n\n# Delete line 7 and quit\n7G\ndd\n:wq",
+output:"# During interactive replace:\nreplace with Artificial Learning (y/n/a/q)? y\nreplace with Artificial Learning (y/n/a/q)? y\n# Press y each time, or a to replace all at once"},
+b:{label:"1b",title:"Vim Editor — Correct sample.c",
+exec:"vi sample.c\ncc sample.c\n./a.out",
+code:"# Type the WRONG code first:\n#include<stio.h>\n#include errno.h\nint test(int * message)\n{print(\"Errno is %8d',errno) exit;\n\n# Then correct it to:\n#include <stdio.h>\n#include <stdlib.h>\n#include <errno.h>\nvoid test(char *message) {\n    printf(\"Errno is %8d\\n\", errno);\n    exit(1);\n}\nint main() {\n    test(\"Some message\");\n    return 0;\n}",
+output:"rit-admin@ritadmin:~$ vi sample.c\nrit-admin@ritadmin:~$ cc sample.c\nrit-admin@ritadmin:~$ ./a.out\nErrno is        0"}};
+
+D[2]={title:"Chit 2 — Shell: Dirs+Files / Permissions",
+a:{label:"2a",title:"Create 10 Department Folders with 10 Files Each",
+exec:"vi prog2a.sh\nsh prog2a.sh",
+code:"#!/bin/bash\ndepartments=\"CS IS AI ML CyberSec EC Mechanical EEE DS Civil\"\nfor dept in $departments; do\n    mkdir -p \"$dept\"\n    for j in $(seq -f \"%03g\" 1 10); do\n        touch \"$dept/name_date.txt-$j\"\n    done\ndone\ntree",
+output:".\n|-- CS\n|   |-- name_date.txt-001\n|   |-- name_date.txt-002\n|   |-- ... (up to 010)\n|-- IS\n|   |-- name_date.txt-001 ... 010\n|-- AI\n|-- ML\n|-- CyberSec\n|-- EC\n|-- Mechanical\n|-- EEE\n|-- DS\n`-- Civil\n    `-- name_date.txt-010\n10 directories, 100 files"},
+b:{label:"2b",title:"Display File Permissions and Modification Time",
+exec:"vi prog2b.sh\nsh prog2b.sh t2",
+code:"#!/bin/bash\nif [ $# -eq 0 ]; then\n    echo \"Usage: sh prog2b.sh <filename>\"\nelse\n    ls -l \"$1\"\nfi",
+output:"sh prog2b.sh t2\n-rw-rw-r-- 1 rit-admin rit-admin 45 Sep 24 11:43 t2\n^perms      ^links ^owner   ^size  ^date     ^name"}};
+
+D[3]={title:"Chit 3 — Shell: Largest File / Rename-Create",
+a:{label:"3a",title:"Find Largest File in a Directory Recursively",
+exec:"vi prog3a.sh\nsh prog3a.sh cy",
+code:"#!/bin/bash\nfor i in \"$@\"; do\n    if [ -d \"$i\" ]; then\n        echo \"Largest file in $i:\"\n        ls -Rl \"$i\" | grep \"^-\" | tr -s ' ' | \\\n          cut -d' ' -f5,9 | sort -n | tail -1\n    else\n        echo \"$i is not a directory\"\n    fi\ndone",
+output:"sh prog3a.sh cy\nLargest file in cy:\n135 11:39\n(135 = size in bytes, 11:39 = modification time)"},
+b:{label:"3b",title:"Rename File if Exists, Create New if Not",
+exec:"vi prog3b.sh\nsh prog3b.sh",
+code:"#!/bin/bash\nfile_name=\"example.txt\"\nif [ -e \"$file_name\" ]; then\n    echo \"File exists.\"\n    mv \"$file_name\" \"${file_name}_old\"\n    echo \"Renamed to example.txt_old\"\n    touch \"$file_name\"\n    echo \"New empty file created.\"\n    echo \"Both conditions done together.\"\nelse\n    touch \"$file_name\"\n    echo \"File did not exist. New empty file created.\"\nfi\necho \"Script execution completed.\"",
+output:"# First run (file does NOT exist):\nFile did not exist. New empty file created.\nScript execution completed.\n\n# Second run (file NOW exists):\nFile exists.\nRenamed to example.txt_old\nNew empty file created.\nBoth conditions done together.\nScript execution completed."}};
+
+D[4]={title:"Chit 4 — Shell: Disk Space / Word Count",
+a:{label:"4a",title:"Disk Space Check — Warn if > 80%, List Files > 1GB",
+exec:"vi prog4a.sh\nsh prog4a.sh",
+code:"#!/bin/bash\nspace_usage=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')\necho \"System Space Usage: $space_usage%\"\n\nif [ \"$space_usage\" -gt 80 ]; then\n    echo \"Low System Space\"\n    echo \"Files larger than 1GB:\"\n    find / -type f -size +1G -exec ls -lh {} \\; 2>/dev/null\nfi",
+output:"# If usage < 80%:\nSystem Space Usage: 62%\n\n# If usage > 80%:\nSystem Space Usage: 85%\nLow System Space\nFiles larger than 1GB:\n-rwxr-xr-x 1 root root 1.2G Jan 15 10:22 /home/user/bigfile.iso"},
+b:{label:"4b",title:"Count Words, Characters, Spaces, Special Symbols",
+exec:"vi prog4b.sh\nsh prog4b.sh",
+code:"#!/bin/bash\ncount_text_stats() {\n    input_text=\"$1\"\n    char_count=$(echo -n \"$input_text\" | wc -m)\n    word_count=$(echo \"$input_text\" | wc -w)\n    space_count=$(echo \"$input_text\" | tr -cd ' ' | wc -c)\n    special_count=$(echo \"$input_text\" | tr -cd '[:punct:]' | wc -c)\n    echo \"Character count: $char_count\"\n    echo \"Word count: $word_count\"\n    echo \"White space count: $space_count\"\n    echo \"Special symbol count: $special_count\"\n}\n\ntext_to_analyze=\"This is an example text! It contains special symbols, such as @ and #.\"\ncount_text_stats \"$text_to_analyze\"\necho \"Script execution completed.\"",
+output:"Character count: 70\nWord count: 12\nWhite space count: 11\nSpecial symbol count: 5\nScript execution completed."}};
+
+D[5]={title:"Chit 5 — AWK: Date Converter / Remove Duplicates",
+a:{label:"5a",title:"AWK — Convert dd-mm-yy to Month Day Year",
+exec:"vi pgr5.awk\nawk -f pgr5.awk",
+code:"#!/usr/bin/awk -f\n{\n    split($0, arr, \"-\")\n    if (arr[1] < 1 || arr[1] > 31 || arr[2] < 1 || arr[2] > 12) {\n        print \"Invalid date\"\n        exit 0\n    }\n    months = \"Jan Feb March April May Jun Jul Aug Sep Oct Nov Dec\"\n    n = split(months, m, \" \")\n    print m[arr[2]], arr[1], arr[3]\n}",
+output:"$ awk -f pgr5.awk\n04-09-2024        <- type this then Enter\nSep 04 2024       <- output\n\n$ awk -f pgr5.awk\n35-13-2024        <- invalid input\nInvalid date"},
+b:{label:"5b",title:"AWK — Remove Duplicate Lines (Preserve Order)",
+exec:"vi prog5b.awk\nawk -f prog5b.awk input1.txt\n# OR one-liner:\nawk '!seen[$0]++' input1.txt > out13a.txt",
+code:"#!/usr/bin/awk -f\nBEGIN { print \"Removing duplicated lines\" }\n{\n    line[++no] = $0\n}\nEND {\n    for (i = 1; i <= no; i++) {\n        flag = 1\n        for (j = 1; j < i; j++)\n            if (line[i] == line[j]) flag = 0\n        if (flag == 1)\n            print line[i] >> \"out13a.txt\"\n    }\n}",
+output:"# input1.txt contains:\nhello\nhello\ngood\n\n$ awk -f prog5b.awk input1.txt\nRemoving duplicated lines\n\n$ cat out13a.txt\nhello\ngood\n(duplicate removed, order preserved)"}};
+
+D[6]={title:"Chit 6 — SED Operations / find Commands",
+a:{label:"6a",title:"SED — Operations on 1.txt",
+exec:"cat > 1.txt\n# type content, Ctrl+D to save",
+code:"# Task 1 — Replace Python with Perl in line 2 ONLY:\nsed '2 s/Python/Perl/g' 1.txt\n\n# Task 2 — Replace LAST occurrence of Programming with Scripting:\nsed 's/\\(.*\\)Programming/\\1Scripting/' 1.txt\n\n# Task 3 — Strip path, keep just filename:\necho \"/MSRIT/CSE/UG/Python.txt\" | sed 's|.*/||'\n\n# Task 4 — Add Learn before and Programming after Bash:\nsed 's/\\(Bash\\)/Learn \\1 Programming/' 1.txt",
+output:"# Task 1 (only line 2 changed):\nPython is a very popular language.\nPerl is easy to use. Perl is easy to learn...\nHTML is a Markup Language Python Programming...\n\n# Task 3:\nPython.txt\n\n# Task 4 (last line):\nLearn Bash Programming"},
+b:{label:"6b",title:"find — File Search and Permission Operations",
+exec:"# Run each command directly in terminal",
+code:"# i. Find all files with 777 permissions:\nfind . -type f -perm 0777\n\n# ii. Assign sticky bit to all files:\nfind . -type f -exec chmod +t {} +\n\n# iii. Find dirs with 777, change to 755:\nfind . -type d -perm 777 -exec chmod 755 {} +\n\n# iv. Files modified in last 20 days:\nfind . -type f -mtime -20\n\n# iv. Files accessed in last 20 days:\nfind . -type f -atime -20\n\n# v. Files modified in last 1 hour:\nfind . -type f -mmin -60",
+output:"$ find . -type f -perm 0777\n./rit2/pgm.sh\n./cy/66.txt\n./cy/pgm2b.sh\n\n$ find . -type f -mtime -20\n./prog2a.sh\n./prog4b.sh\n./1.txt\n\n$ find . -type f -mmin -60\n./prog6a.sh"}};
+
+D[7]={title:"Chit 7 — C: ls -li / Remove Empty Files",
+a:{label:"7a",title:"C Program — Emulate ls -li (List All File Attributes)",
+exec:"vi prog7.c\ncc prog7.c\n./a.out\n# OR for specific dir:\n./a.out /home/user",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <dirent.h>\n#include <unistd.h>\n#include <pwd.h>\n#include <grp.h>\n#include <time.h>\n\nvoid print_permissions(struct stat fileStat) {\n    printf((S_ISDIR(fileStat.st_mode)) ? \"d\" : \"-\");\n    printf((fileStat.st_mode & S_IRUSR) ? \"r\" : \"-\");\n    printf((fileStat.st_mode & S_IWUSR) ? \"w\" : \"-\");\n    printf((fileStat.st_mode & S_IXUSR) ? \"x\" : \"-\");\n    printf((fileStat.st_mode & S_IRGRP) ? \"r\" : \"-\");\n    printf((fileStat.st_mode & S_IWGRP) ? \"w\" : \"-\");\n    printf((fileStat.st_mode & S_IXGRP) ? \"x\" : \"-\");\n    printf((fileStat.st_mode & S_IROTH) ? \"r\" : \"-\");\n    printf((fileStat.st_mode & S_IWOTH) ? \"w\" : \"-\");\n    printf((fileStat.st_mode & S_IXOTH) ? \"x\" : \"-\");\n}\n\nvoid list_directory(const char *dirpath) {\n    DIR *dir;\n    struct dirent *entry;\n    struct stat fileStat;\n    char fullpath[1024];\n\n    dir = opendir(dirpath);\n    if (dir == NULL) { perror(\"opendir\"); exit(EXIT_FAILURE); }\n\n    while ((entry = readdir(dir)) != NULL) {\n        snprintf(fullpath, sizeof(fullpath), \"%s/%s\", dirpath, entry->d_name);\n        if (stat(fullpath, &fileStat) == -1) { perror(\"stat\"); continue; }\n\n        printf(\"%ld \", (long)fileStat.st_ino);\n        print_permissions(fileStat);\n        printf(\" %ld \", (long)fileStat.st_nlink);\n        printf(\"%s %s \", getpwuid(fileStat.st_uid)->pw_name,\n                         getgrgid(fileStat.st_gid)->gr_name);\n        printf(\"%5ld \", (long)fileStat.st_size);\n\n        char timebuf[80];\n        struct tm *timeinfo = localtime(&fileStat.st_mtime);\n        strftime(timebuf, sizeof(timebuf), \"%b %d %H:%M\", timeinfo);\n        printf(\"%s %s\\n\", timebuf, entry->d_name);\n    }\n    closedir(dir);\n}\n\nint main(int argc, char *argv[]) {\n    const char *dirpath = (argc > 1) ? argv[1] : \".\";\n    list_directory(dirpath);\n    return 0;\n}",
+output:"$ cc prog7.c && ./a.out\n6074738 -rw-rw-r-- 1 rit-admin rit-admin    12 Sep 25 14:11 create.sh\n6073890 -rw-rw-r-- 1 rit-admin rit-admin    39 Sep 24 13:05 prog3c.sh\n6029383 drwxr-xr-x 2 rit-admin rit-admin  4096 Jun 03 12:44 Documents\n^inode  ^perms      ^links ^owner  ^group ^size ^date     ^filename"},
+b:{label:"7b",title:"C Program — Remove Empty Files from Directory",
+exec:"vi prog7b.c\ngcc prog7b.c -o ref\n./ref .",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#include <dirent.h>\n#include <sys/stat.h>\n#include <unistd.h>\n\nvoid removeEmptyFiles(char *path) {\n    DIR *dir;\n    struct dirent *entry;\n    struct stat fileStat;\n\n    if ((dir = opendir(path)) == NULL) {\n        perror(\"Error opening directory\");\n        exit(EXIT_FAILURE);\n    }\n\n    while ((entry = readdir(dir)) != NULL) {\n        char filePath[1024];\n        snprintf(filePath, sizeof(filePath), \"%s/%s\", path, entry->d_name);\n\n        if (stat(filePath, &fileStat) < 0) {\n            perror(\"Error getting file status\");\n            exit(EXIT_FAILURE);\n        }\n\n        if (S_ISREG(fileStat.st_mode) && fileStat.st_size == 0) {\n            if (unlink(filePath) == 0)\n                printf(\"Removed empty file: %s\\n\", entry->d_name);\n            else\n                perror(\"Error removing file\");\n        }\n    }\n    closedir(dir);\n}\n\nint main(int argc, char *argv[]) {\n    if (argc != 2) {\n        fprintf(stderr, \"Usage: %s <directory>\\n\", argv[0]);\n        exit(EXIT_FAILURE);\n    }\n    removeEmptyFiles(argv[1]);\n    return 0;\n}",
+output:"$ gcc prog7b.c -o ref && ./ref .\nRemoved empty file: emptyfile1.txt\nRemoved empty file: emptyfile2.txt\n(only files with size 0 are deleted)"}};
+
+D[8]={title:"Chit 8 — C: dup+lseek / List Files",
+a:{label:"8a",title:"C Program — Read n Chars from File and Append Back (dup)",
+exec:"vi prog8a.c\ngcc prog8a.c -o prog8a\necho 'Hello World' > file.txt\n./prog8a",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <fcntl.h>\n#define MAX_SIZE 100\n\nint main() {\n    char filename[] = \"file.txt\";\n    int fd, new_fd;\n    char buffer[MAX_SIZE];\n    ssize_t bytes_read;\n    int n;\n\n    printf(\"Enter the number of characters to read and append: \");\n    scanf(\"%d\", &n);\n\n    fd = open(filename, O_RDWR);\n    if (fd == -1) { perror(\"Error opening file\"); exit(EXIT_FAILURE); }\n\n    lseek(fd, 0, SEEK_END);\n    new_fd = dup(fd);\n    if (new_fd == -1) { perror(\"dup failed\"); close(fd); exit(EXIT_FAILURE); }\n\n    lseek(fd, -n, SEEK_END);\n    bytes_read = read(fd, buffer, n);\n    if (bytes_read == -1) { perror(\"read failed\"); exit(EXIT_FAILURE); }\n\n    if (write(new_fd, buffer, bytes_read) != bytes_read) {\n        perror(\"Error writing\");\n        close(fd); close(new_fd);\n        exit(EXIT_FAILURE);\n    }\n\n    close(fd);\n    close(new_fd);\n    printf(\"%d characters read and appended successfully.\\n\", (int)bytes_read);\n    return 0;\n}",
+output:"$ echo 'Hello World' > file.txt\n$ ./prog8a\nEnter the number of characters to read and append: 5\n5 characters read and appended successfully.\n\n$ cat file.txt\nHello WorldWorld\n(last 5 chars 'World' were appended to end)"},
+b:{label:"8b",title:"C Program — List All Files in Current Directory",
+exec:"vi prog8b.c\ncc prog8b.c\n./a.out",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#include <dirent.h>\n\nvoid list_files(const char *dirpath) {\n    DIR *dir;\n    struct dirent *entry;\n\n    dir = opendir(dirpath);\n    if (dir == NULL) { perror(\"opendir\"); exit(EXIT_FAILURE); }\n\n    while ((entry = readdir(dir)) != NULL) {\n        if (entry->d_name[0] == '.') {\n            continue;\n        }\n        printf(\"%s\\n\", entry->d_name);\n    }\n    closedir(dir);\n}\n\nint main() {\n    printf(\"Files in the current directory:\\n\");\n    list_files(\".\");\n    return 0;\n}",
+output:"$ cc prog8b.c && ./a.out\nFiles in the current directory:\ncreate.sh\nprog3c.sh\ntest2.c\n1.txt\nDocuments\n(hidden files like .bashrc are skipped)"}};
+
+D[9]={title:"Chit 9 — C: cp Simulator / ls Simulator",
+a:{label:"9a",title:"C Program — Simulate the cp (Copy) Command",
+exec:"vi prog9a.c\ngcc prog9a.c -o mycp\necho 'Hello source' > source.txt\n./mycp source.txt dest.txt",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#define BUFFER_SIZE 1024\n\nint main(int argc, char *argv[]) {\n    if (argc != 3) {\n        fprintf(stderr, \"Usage: %s <source_file> <destination_file>\\n\", argv[0]);\n        exit(EXIT_FAILURE);\n    }\n\n    FILE *source_file, *destination_file;\n    char buffer[BUFFER_SIZE];\n    size_t bytesRead;\n\n    source_file = fopen(argv[1], \"rb\");\n    if (source_file == NULL) {\n        perror(\"Error opening source file\");\n        exit(EXIT_FAILURE);\n    }\n\n    destination_file = fopen(argv[2], \"wb\");\n    if (destination_file == NULL) {\n        perror(\"Error opening destination file\");\n        fclose(source_file);\n        exit(EXIT_FAILURE);\n    }\n\n    while ((bytesRead = fread(buffer, 1, BUFFER_SIZE, source_file)) > 0) {\n        fwrite(buffer, 1, bytesRead, destination_file);\n    }\n\n    fclose(source_file);\n    fclose(destination_file);\n    printf(\"File copied successfully.\\n\");\n    return 0;\n}",
+output:"$ gcc prog9a.c -o mycp\n$ echo 'Hello from source' > source.txt\n$ ./mycp source.txt dest.txt\nFile copied successfully.\n$ cat dest.txt\nHello from source"},
+b:{label:"9b",title:"C Program — Simulate the ls Command",
+exec:"vi prog9b.c\ncc prog9b.c\n./a.out",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#include <dirent.h>\n\nint main() {\n    DIR *dir;\n    struct dirent *entry;\n\n    dir = opendir(\".\");\n    if (dir == NULL) {\n        perror(\"Error opening directory\");\n        exit(EXIT_FAILURE);\n    }\n\n    while ((entry = readdir(dir)) != NULL) {\n        printf(\"%s\\n\", entry->d_name);\n    }\n\n    closedir(dir);\n    return 0;\n}",
+output:"$ cc prog9b.c && ./a.out\n.\n..\n.bashrc\nprog9b.c\na.out\nsource.txt\n(shows ALL files including hidden ones)"}};
+
+D[10]={title:"Chit 10 — C: P1-P2 Pipes / grep Simulator",
+a:{label:"10a",title:"C Program — Two Processes P1 and P2 Communicate via Pipe",
+exec:"vi prog10.c\ncc prog10.c\n./a.out",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <string.h>\n#define BUFFER_SIZE 256\n\nint main() {\n    int pipe1[2];\n    int pipe2[2];\n    pid_t pid;\n\n    if (pipe(pipe1) == -1 || pipe(pipe2) == -1) {\n        perror(\"Pipe creation failed\");\n        exit(EXIT_FAILURE);\n    }\n\n    pid = fork();\n    if (pid < 0) { perror(\"Fork failed\"); exit(EXIT_FAILURE); }\n\n    if (pid > 0) {  // P1 (parent)\n        close(pipe1[0]);\n        close(pipe2[1]);\n\n        char input[BUFFER_SIZE];\n        printf(\"Enter a string: \");\n        fgets(input, BUFFER_SIZE, stdin);\n        input[strcspn(input, \"\\n\")] = 0;\n\n        write(pipe1[1], input, strlen(input) + 1);\n\n        char output[BUFFER_SIZE];\n        read(pipe2[0], output, BUFFER_SIZE);\n        printf(\"Concatenated String from P2: %s\\n\", output);\n\n        close(pipe1[1]);\n        close(pipe2[0]);\n\n    } else {  // P2 (child)\n        close(pipe1[1]);\n        close(pipe2[0]);\n\n        char received[BUFFER_SIZE];\n        read(pipe1[0], received, BUFFER_SIZE);\n\n        const char *concat_str = \" - Processed by P2\";\n        char result[BUFFER_SIZE];\n        int i = 0, j = 0;\n\n        while (received[i] != '\\0') { result[i] = received[i]; i++; }\n        while (concat_str[j] != '\\0') { result[i++] = concat_str[j++]; }\n        result[i] = '\\0';\n\n        write(pipe2[1], result, strlen(result) + 1);\n\n        close(pipe1[0]);\n        close(pipe2[1]);\n        exit(0);\n    }\n    return 0;\n}",
+output:"$ cc prog10.c && ./a.out\nEnter a string: ramaiah\nConcatenated String from P2: ramaiah - Processed by P2"},
+b:{label:"10b",title:"C Program — Simulate grep Command",
+exec:"vi prog10b.c\ncc prog10b.c\n./a.out hello input1.txt",
+code:"#include <stdio.h>\n#include <stdlib.h>\n#include <fcntl.h>\n#include <unistd.h>\n#include <string.h>\n#define BUFFER_SIZE 1024\n\nvoid grep_pattern(const char *filename, const char *pattern) {\n    int fd;\n    char buffer[BUFFER_SIZE];\n    ssize_t bytesRead;\n    char *line;\n\n    fd = open(filename, O_RDONLY);\n    if (fd < 0) { perror(\"Error opening file\"); exit(EXIT_FAILURE); }\n\n    while ((bytesRead = read(fd, buffer, sizeof(buffer))) > 0) {\n        buffer[bytesRead] = '\\0';\n        line = strtok(buffer, \"\\n\");\n\n        while (line != NULL) {\n            if (strstr(line, pattern) != NULL) {\n                printf(\"%s\\n\", line);\n            }\n            line = strtok(NULL, \"\\n\");\n        }\n    }\n\n    if (bytesRead < 0) perror(\"Error reading file\");\n    close(fd);\n}\n\nint main(int argc, char *argv[]) {\n    if (argc != 3) {\n        fprintf(stderr, \"Usage: %s <pattern> <filename>\\n\", argv[0]);\n        exit(EXIT_FAILURE);\n    }\n    grep_pattern(argv[2], argv[1]);\n    return 0;\n}",
+output:"$ cc prog10b.c && ./a.out hello input1.txt\nhello\n(prints every line containing 'hello')\n\n$ ./a.out Python 1.txt\nPython is a very popular language.\nPython is easy to use. Python is easy to learn.\nHTML is a Markup Language Python Programming Language..."}};
+
+var labels = {
+  1:["Vim Editor","Operations"],
+  2:["Create Dirs+Files","File Permissions"],
+  3:["Largest File","Rename/Create"],
+  4:["Disk Space","Word Count"],
+  5:["AWK Date","AWK Dedup"],
+  6:["SED Ops","find Commands"],
+  7:["C: ls -li","C: Remove Empty"],
+  8:["C: dup/lseek","C: List Files"],
+  9:["C: cp simulator","C: ls simulator"],
+  10:["C: P1-P2 Pipes","C: grep sim"]
+};
+
+// Build grid
+var grid = document.getElementById('grid');
+for(var i=1;i<=10;i++){
+  var btn = document.createElement('div');
+  btn.className = 'chit-btn';
+  btn.setAttribute('data-n', i);
+  btn.innerHTML = '<span class="num">'+i+'</span><span class="lbl">'+labels[i][0]+'<br>'+labels[i][1]+'</span>';
+  btn.addEventListener('click', (function(n){ return function(){ show(n); }; })(i));
+  grid.appendChild(btn);
+}
+
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildTab(p){
+  return '<div class="prog-lbl">'+p.label+'</div>'+
+    '<div class="prog-title">'+p.title+'</div>'+
+    '<span class="sec-lbl l-exec">How to Execute</span>'+
+    '<pre class="exec-block">'+esc(p.exec)+'</pre>'+
+    '<span class="sec-lbl l-code">Program Code</span>'+
+    '<pre class="code-block">'+esc(p.code)+'</pre>'+
+    '<span class="sec-lbl l-out">Expected Output</span>'+
+    '<pre class="out-block">'+esc(p.output)+'</pre>';
+}
+
+function show(n){
+  var d = D[n];
+  document.getElementById('chit-title').textContent = d.title;
+  document.getElementById('tab-a').innerHTML = buildTab(d.a);
+  document.getElementById('tab-b').innerHTML = buildTab(d.b);
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('detail').style.display = 'block';
+  document.querySelectorAll('.tab-btn')[0].classList.add('active');
+  document.querySelectorAll('.tab-btn')[1].classList.remove('active');
+  document.getElementById('tab-a').classList.add('active');
+  document.getElementById('tab-b').classList.remove('active');
+  window.scrollTo(0,0);
+}
+
+function switchTab(t){
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){
+    b.classList.toggle('active',(t==='a'&&i===0)||(t==='b'&&i===1));
+  });
+  document.getElementById('tab-a').classList.toggle('active',t==='a');
+  document.getElementById('tab-b').classList.toggle('active',t==='b');
+}
+
+function goHome(){
+  document.getElementById('home').style.display='block';
+  document.getElementById('detail').style.display='none';
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
